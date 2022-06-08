@@ -35,6 +35,7 @@ module.exports = {
       "behaviors/caps-word",
       "behaviors/key-repeat",
       "behaviors/mouse-emulation",
+      "behaviors/sensor-rotate",
       "behaviors/reset",
       "behaviors/bluetooth",
       "behaviors/outputs",
