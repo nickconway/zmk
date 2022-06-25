@@ -1,0 +1,21 @@
+# Copyright (c) 2022 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+description: Triplex Behavior
+
+compatible: "zmk,behavior-triplex"
+
+include: zero_param.yaml
+
+properties:
+  bindings:
+    type: phandle-array
+    required: true
+  shared-key-positions:
+    type: array
+    required: false
+    default: []
+  shared-layers:
+    type: array
+    required: false
+    default: []

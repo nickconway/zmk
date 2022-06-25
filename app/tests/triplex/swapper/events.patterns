@@ -1,0 +1,2 @@
+s/.*hid_listener_keycode/kp/p
+s/.*on_triplex_binding/triplex_binding/p
