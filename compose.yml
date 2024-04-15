@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  zmk:
+    container_name: zmk
+    working_dir: "/workspace/app"
+    command: "bash -c 'west init -l .; west update; sleep infinity'"
+    restart: unless-stopped
+    build:
+      context: .devcontainer/
+      dockerfile: Dockerfile
+    volumes:
+      - $PWD:/workspace
+      # - ./.root:/root
+      - ../zmk-config:/workspace/zmk-config
+      - ./zephyr:/workspace/zephyr
+      - ./modules:/workspace/modules
+      - ./tools:/workspace/tools
+      - ./app/build:/workspace/app/build
