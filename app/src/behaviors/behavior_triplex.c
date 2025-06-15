@@ -198,7 +198,7 @@ static int triplex_layer_state_changed_listener(const zmk_event_t *eh) {
 #define _TRANSFORM_ENTRY(idx, node) ZMK_KEYMAP_EXTRACT_BINDING(idx, node),
 
 #define TRANSFORMED_BINDINGS(node)                                                                 \
-    { UTIL_LISTIFY(DT_INST_PROP_LEN(node, bindings), _TRANSFORM_ENTRY, DT_DRV_INST(node)) }
+    {UTIL_LISTIFY(DT_INST_PROP_LEN(node, bindings), _TRANSFORM_ENTRY, DT_DRV_INST(node))}
 
 #define TRIPLEX_INST(n)                                                                            \
     static struct zmk_behavior_binding                                                             \
