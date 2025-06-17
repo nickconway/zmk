@@ -446,6 +446,7 @@ static int press_retro_tap_binding(struct active_hold_tap *hold_tap) {
     struct zmk_behavior_binding binding = {.behavior_dev = hold_tap->config->retro_tap_behavior_dev,
                                            .param1 = hold_tap->config->retro_tap_param1,
                                            .param2 = hold_tap->config->retro_tap_param2};
+    LOG_DBG("Pressing %s %d %d", binding.behavior_dev, binding.param1, binding.param2);
     return zmk_behavior_invoke_binding(&binding, event, true);
 }
 
