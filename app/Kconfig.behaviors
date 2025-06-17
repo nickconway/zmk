@@ -144,3 +144,8 @@ config ZMK_BEHAVIOR_LEADER_KEY
     bool
     default y
     depends on DT_HAS_ZMK_BEHAVIOR_LEADER_KEY_ENABLED
+
+config ZMK_BEHAVIOR_DYNAMIC_MACRO
+    bool
+    default y
+    depends on DT_HAS_ZMK_BEHAVIOR_DYNAMIC_MACRO_ENABLED
