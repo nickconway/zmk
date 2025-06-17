@@ -63,7 +63,7 @@ struct behavior_hold_tap_config {
     bool hold_while_undecided;
     bool hold_while_undecided_linger;
     bool retro_tap;
-    char *retro_tap_behavior;
+    char *retro_tap_behavior_dev;
     uint32_t retro_tap_param1;
     uint32_t retro_tap_param2;
     bool hold_trigger_on_release;
@@ -434,6 +434,21 @@ static int press_tap_binding(struct active_hold_tap *hold_tap) {
     return zmk_behavior_invoke_binding(&binding, event, true);
 }
 
+static int press_retro_tap_binding(struct active_hold_tap *hold_tap) {
+    struct zmk_behavior_binding_event event = {
+        .position = hold_tap->position,
+        .timestamp = hold_tap->timestamp,
+#if IS_ENABLED(CONFIG_ZMK_SPLIT)
+        .source = hold_tap->source,
+#endif
+    };
+
+    struct zmk_behavior_binding binding = {.behavior_dev = hold_tap->config->retro_tap_behavior_dev,
+                                           .param1 = hold_tap->retro_tap_param1,
+                                           .param2 = hold_tap->retro_tap_param2};
+    return zmk_behavior_invoke_binding(&binding, event, true);
+}
+
 static int release_hold_binding(struct active_hold_tap *hold_tap) {
     struct zmk_behavior_binding_event event = {
         .position = hold_tap->position,
@@ -459,6 +474,21 @@ static int release_tap_binding(struct active_hold_tap *hold_tap) {
 
     struct zmk_behavior_binding binding = {.behavior_dev = hold_tap->config->tap_behavior_dev,
                                            .param1 = hold_tap->param_tap};
+    return zmk_behavior_invoke_binding(&binding, event, false);
+}
+
+static int release_retro_tap_binding(struct active_hold_tap *hold_tap) {
+    struct zmk_behavior_binding_event event = {
+        .position = hold_tap->position,
+        .timestamp = hold_tap->timestamp,
+#if IS_ENABLED(CONFIG_ZMK_SPLIT)
+        .source = hold_tap->source,
+#endif
+    };
+
+    struct zmk_behavior_binding binding = {.behavior_dev = hold_tap->config->retro_tap_behavior_dev,
+                                           .param1 = hold_tap->retro_tap_param1,
+                                           .param2 = hold_tap->retro_tap_param2};
     return zmk_behavior_invoke_binding(&binding, event, false);
 }
 
@@ -494,7 +524,7 @@ static int release_binding(struct active_hold_tap *hold_tap) {
     if (hold_tap->status == STATUS_HOLD_TIMER || hold_tap->status == STATUS_HOLD_INTERRUPT) {
         return release_hold_binding(hold_tap);
     } else if (hold_tap->status == STATUS_RETRO_TAP) {
-        return press_retro_tap_binding(hold_tap);
+        press_retro_tap_binding(hold_tap);
         return release_retro_tap_binding(hold_tap);
     } else {
         return release_tap_binding(hold_tap);
@@ -587,6 +617,7 @@ static void decide_retro_tap(struct active_hold_tap *hold_tap) {
     if (!hold_tap->config->retro_tap) {
         return;
     }
+
     if (hold_tap->status == STATUS_HOLD_TIMER) {
         release_binding(hold_tap);
         LOG_DBG("%d retro tap", hold_tap->position);
