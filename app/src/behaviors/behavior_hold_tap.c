@@ -914,7 +914,7 @@ static int behavior_hold_tap_init(const struct device *dev) {
         .hold_while_undecided = DT_INST_PROP(n, hold_while_undecided),                             \
         .hold_while_undecided_linger = DT_INST_PROP(n, hold_while_undecided_linger),               \
         .retro_tap = DT_INST_PROP(n, retro_tap),                                                   \
-        .retro_tap_behavior = DT_INST_PROP(n, retro_tap_behavior),                                 \
+        .retro_tap_behavior_dev = DT_INST_PROP(n, retro_tap_behavior),                             \
         .retro_tap_param1 = DT_INST_PROP(n, retro_tap_param1),                                     \
         .retro_tap_param2 = DT_INST_PROP(n, retro_tap_param2),                                     \
         .hold_trigger_on_release = DT_INST_PROP(n, hold_trigger_on_release),                       \
