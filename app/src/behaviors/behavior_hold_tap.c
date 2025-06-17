@@ -505,7 +505,8 @@ static int press_binding(struct active_hold_tap *hold_tap) {
             return press_hold_binding(hold_tap);
         }
     } else if (hold_tap->status == STATUS_RETRO_TAP) {
-        return store_last_hold_tapped(hold_tap);
+        store_last_hold_tapped(hold_tap);
+        return 0;
     } else {
         if (hold_tap->config->hold_while_undecided &&
             !hold_tap->config->hold_while_undecided_linger) {
