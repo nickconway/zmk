@@ -525,6 +525,7 @@ static int release_binding(struct active_hold_tap *hold_tap) {
     if (hold_tap->status == STATUS_HOLD_TIMER || hold_tap->status == STATUS_HOLD_INTERRUPT) {
         return release_hold_binding(hold_tap);
     } else if (hold_tap->status == STATUS_RETRO_TAP) {
+        LOG_DBG("RELEASED RETRO TAP");
         press_retro_tap_binding(hold_tap);
         return release_retro_tap_binding(hold_tap);
     } else {
@@ -626,6 +627,7 @@ static void decide_retro_tap(struct active_hold_tap *hold_tap) {
             hold_tap->status = STATUS_TAP;
         } else {
             hold_tap->status = STATUS_RETRO_TAP;
+            LOG_DBG("%d RETRO TAP", hold_tap->position);
         }
         press_binding(hold_tap);
         return;
