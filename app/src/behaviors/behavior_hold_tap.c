@@ -444,8 +444,8 @@ static int press_retro_tap_binding(struct active_hold_tap *hold_tap) {
     };
 
     struct zmk_behavior_binding binding = {.behavior_dev = hold_tap->config->retro_tap_behavior_dev,
-                                           .param1 = hold_tap->retro_tap_param1,
-                                           .param2 = hold_tap->retro_tap_param2};
+                                           .param1 = hold_tap->config->retro_tap_param1,
+                                           .param2 = hold_tap->config->retro_tap_param2};
     return zmk_behavior_invoke_binding(&binding, event, true);
 }
 
@@ -487,8 +487,8 @@ static int release_retro_tap_binding(struct active_hold_tap *hold_tap) {
     };
 
     struct zmk_behavior_binding binding = {.behavior_dev = hold_tap->config->retro_tap_behavior_dev,
-                                           .param1 = hold_tap->retro_tap_param1,
-                                           .param2 = hold_tap->retro_tap_param2};
+                                           .param1 = hold_tap->config->retro_tap_param1,
+                                           .param2 = hold_tap->config->retro_tap_param2};
     return zmk_behavior_invoke_binding(&binding, event, false);
 }
 
