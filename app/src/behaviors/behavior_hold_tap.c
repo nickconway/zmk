@@ -621,7 +621,7 @@ static void decide_retro_tap(struct active_hold_tap *hold_tap) {
     if (hold_tap->status == STATUS_HOLD_TIMER) {
         release_binding(hold_tap);
         LOG_DBG("%d retro tap", hold_tap->position);
-        if (strcmp(hold_tap->config->retro_tap_behavior, "") == 0) {
+        if (strcmp(hold_tap->config->retro_tap_behavior_dev, "") == 0) {
             hold_tap->status = STATUS_TAP;
         } else {
             hold_tap->status = STATUS_RETRO_TAP;
