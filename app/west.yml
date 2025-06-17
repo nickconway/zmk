@@ -4,9 +4,11 @@ manifest:
       url-base: https://github.com/zephyrproject-rtos
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
+    - name: nick
+      url-base: https://github.com/nickconway
   projects:
     - name: zephyr
-      remote: zmkfirmware
+      remote: nick
       revision: v3.5.0+zmk-fixes
       clone-depth: 1
       import:
