@@ -154,3 +154,8 @@ config ZMK_BEHAVIOR_LEADER_KEY
     bool
     default y
     depends on DT_HAS_ZMK_BEHAVIOR_LEADER_KEY_ENABLED
+
+config ZMK_BEHAVIOR_LAST_DEVICE
+    bool
+    default y
+    depends on DT_HAS_ZMK_BEHAVIOR_LAST_DEVICE_ENABLED
