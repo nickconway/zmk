@@ -28,6 +28,7 @@ bool skip_next_endpoint_change = false;
 
 static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
                                      struct zmk_behavior_binding_event event) {
+    LOG_DBG("Last device pressed %d", last_device);
     if (last_device == -1) {
         LOG_DBG("Toggling output");
         zmk_endpoints_toggle_transport();
