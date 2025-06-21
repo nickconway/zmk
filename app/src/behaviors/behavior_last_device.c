@@ -23,8 +23,8 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #define DT_DRV_COMPAT zmk_behavior_last_device
 
-int8_t last_device;
-bool skip_next_endpoint_change = false;
+static int8_t last_device;
+static bool skip_next_endpoint_change = false;
 
 static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
                                      struct zmk_behavior_binding_event event) {
@@ -91,7 +91,7 @@ ZMK_SUBSCRIPTION(last_device_listener, zmk_endpoint_changed);
 ZMK_SUBSCRIPTION(last_device_listener, zmk_ble_active_profile_changed);
 
 #define LAST_DEVICE_INST(n)                                                                        \
-    DEVICE_DT_INST_DEFINE(n, behavior_last_device_init, NULL, NULL, NULL, POST_KERNEL,             \
+    BEHAVIOR_DT_INST_DEFINE(n, behavior_last_device_init, NULL, NULL, NULL, POST_KERNEL,             \
                           CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &behavior_last_device_driver_api);
 
 DT_INST_FOREACH_STATUS_OKAY(LAST_DEVICE_INST)
