@@ -31,13 +31,13 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
     LOG_DBG("Last device pressed %d", last_device);
     if (last_device == -1) {
         LOG_DBG("Toggling output");
-        zmk_endpoints_toggle_transport();
+        zmk_endpoint_toggle_preferred_transport();
     } else {
         LOG_DBG("Switching to last ble device: %d", last_device);
         zmk_ble_prof_select(last_device);
         if (zmk_endpoint_get_selected().transport == ZMK_TRANSPORT_USB) {
             LOG_DBG("Toggling output");
-            zmk_endpoints_toggle_transport();
+            zmk_endpoint_toggle_preferred_transport();
         }
     }
 
@@ -91,8 +91,7 @@ ZMK_SUBSCRIPTION(last_device_listener, zmk_endpoint_changed);
 ZMK_SUBSCRIPTION(last_device_listener, zmk_ble_active_profile_changed);
 
 #define LAST_DEVICE_INST(n)                                                                        \
-    BEHAVIOR_DT_INST_DEFINE(n, behavior_last_device_init, NULL, NULL, NULL, POST_KERNEL,           \
-                            CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,                                   \
-                            &behavior_last_device_driver_api);
+    BEHAVIOR_DT_INST_DEFINE(n, behavior_last_device_init, NULL, NULL, NULL, POST_KERNEL,             \
+                          CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &behavior_last_device_driver_api);
 
 DT_INST_FOREACH_STATUS_OKAY(LAST_DEVICE_INST)
