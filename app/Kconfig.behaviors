@@ -159,3 +159,8 @@ config ZMK_BEHAVIOR_TRI_STATE
     bool
     default y
     depends on DT_HAS_ZMK_BEHAVIOR_TRI_STATE_ENABLED
+
+config ZMK_BEHAVIOR_LAST_DEVICE
+    bool
+    default y
+    depends on DT_HAS_ZMK_BEHAVIOR_LAST_DEVICE_ENABLED
