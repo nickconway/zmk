@@ -114,6 +114,7 @@ enum captured_event_tag {
 union captured_event_data {
     struct zmk_position_state_changed_event position;
     struct zmk_keycode_state_changed_event keycode;
+    struct zmk_sensor_event_event sensor;
 };
 
 struct captured_event {
@@ -873,22 +874,23 @@ static int keycode_state_changed_listener(const zmk_event_t *eh) {
 static int sensor_event_listener(const zmk_event_t *eh) {
     struct zmk_sensor_event *ev = as_zmk_sensor_event(eh);
 
-    update_hold_status_for_retro_tap(ev->sensor_number);
+    update_hold_status_for_retro_tap(ev->sensor_index);
 
     if (undecided_hold_tap == NULL) {
         LOG_DBG("bubble (no undecided hold_tap active)");
         return ZMK_EV_EVENT_BUBBLE;
     }
 
-    // If these events were queued, the timer event may be queued too late or not at all.
-    // We make a timer decision before the other key events are handled if the timer would
-    // have run out.
-    if (ev->timestamp >
-        (undecided_hold_tap->timestamp + undecided_hold_tap->config->tapping_term_ms)) {
-        decide_hold_tap(undecided_hold_tap, HT_TIMER_EVENT);
+    // hold-while-undecided can produce a mod, but we don't want to capture it.
+    if (undecided_hold_tap->config->hold_while_undecided &&
+        undecided_hold_tap->status == STATUS_UNDECIDED) {
+        return ZMK_EV_EVENT_BUBBLE;
     }
 
-    capture_event(eh);
+    struct captured_event capture = {.tag = ET_CODE_CHANGED,
+                                     .data = {.sensor = copy_raised_zmk_sensor_event(ev)}};
+    capture_event(&capture);
+
     decide_hold_tap(undecided_hold_tap, HT_OTHER_KEY_DOWN);
     decide_hold_tap(undecided_hold_tap, HT_OTHER_KEY_UP);
     return ZMK_EV_EVENT_CAPTURED;
