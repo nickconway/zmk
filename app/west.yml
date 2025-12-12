@@ -8,7 +8,7 @@ manifest:
       url-base: https://github.com/nickconway
   projects:
     - name: zephyr
-      remote: nick
+      remote: zmkfirmware
       revision: v4.1.0+zmk-fixes
       clone-depth: 1
       import:
