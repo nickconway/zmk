@@ -123,6 +123,7 @@ static int on_dynamic_macro_binding_pressed(struct zmk_behavior_binding *binding
             struct recording_macro *macro;
             if (new_recording_macro(event.position, cfg, state, &macro) == -ENOMEM) {
                 LOG_ERR("Unable to record new macro. Insufficient space in recording_macros[]");
+                state->recording = false;
                 return ZMK_BEHAVIOR_OPAQUE;
             }
             LOG_DBG("Recording new macro: %d", event.position);
