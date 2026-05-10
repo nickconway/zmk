@@ -12,12 +12,11 @@
 #include <zmk/keymap.h>
 #include <zmk/events/keycode_state_changed.h>
 #include <dt-bindings/zmk/dynamic-macros.h>
+#include <dt-bindings/zmk/hid_usage_pages.h>
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #define DT_DRV_COMPAT zmk_behavior_dynamic_macro
-
-#define HID_KEY_USAGE_PAGE 0x70000
 
 int8_t total_recorded_actions = 0;
 
@@ -185,7 +184,8 @@ static int dynamic_macro_keycode_state_changed_listener(const zmk_event_t *eh) {
             }
 
             macro->state->bindings[macro->count].binding.behavior_dev = "key_press";
-            macro->state->bindings[macro->count].binding.param1 = HID_KEY_USAGE_PAGE + ev->keycode;
+            macro->state->bindings[macro->count].binding.param1 =
+                ZMK_HID_USAGE(ev->usage_page, ev->keycode);
             macro->state->bindings[macro->count].binding.param2 = 0;
 
             if (macro->count > 0) {
