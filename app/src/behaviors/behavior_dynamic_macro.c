@@ -18,8 +18,6 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #define DT_DRV_COMPAT zmk_behavior_dynamic_macro
 
-int8_t total_recorded_actions = 0;
-
 struct behavior_dynamic_macro_bind {
     uint32_t wait_ms;
     bool pressed;
@@ -53,15 +51,6 @@ struct recording_macro recording_macros[ZMK_BHV_RECORDING_MACRO_MAX] = {};
 static struct recording_macro *find_recording_macro(uint32_t position) {
     for (int i = 0; i < ZMK_BHV_RECORDING_MACRO_MAX; i++) {
         if (recording_macros[i].position == position && recording_macros[i].recording) {
-            return &recording_macros[i];
-        }
-    }
-    return NULL;
-}
-
-static struct recording_macro *find_macro_at_position(uint32_t position) {
-    for (int i = 0; i < ZMK_BHV_RECORDING_MACRO_MAX; i++) {
-        if (recording_macros[i].position == position) {
             return &recording_macros[i];
         }
     }
@@ -126,12 +115,6 @@ static int on_dynamic_macro_binding_pressed(struct zmk_behavior_binding *binding
                 return ZMK_BEHAVIOR_OPAQUE;
             }
             LOG_DBG("Recording new macro: %d", event.position);
-
-            struct recording_macro *old_macro;
-            old_macro = find_macro_at_position(event.position);
-            if (old_macro) {
-                total_recorded_actions -= old_macro->state->count;
-            }
             macro->count = 0;
         } else {
             struct recording_macro *macro = find_recording_macro(event.position);
@@ -172,42 +155,33 @@ static int dynamic_macro_keycode_state_changed_listener(const zmk_event_t *eh) {
 
     for (int i = 0; i < ZMK_BHV_RECORDING_MACRO_MAX; i++) {
         struct recording_macro *macro = &recording_macros[i];
-        if (macro->recording && total_recorded_actions < CONFIG_ZMK_DYNAMIC_MACRO_MAX_ACTIONS) {
-            uint32_t eventTime = k_uptime_get();
-            uint32_t elapsedTime = eventTime - macro->state->lastEventTime;
-            macro->state->lastEventTime = eventTime;
-
-            if (ev->state) {
-                macro->state->bindings[macro->count].pressed = true;
-            } else {
-                macro->state->bindings[macro->count].pressed = false;
-            }
-
-            macro->state->bindings[macro->count].binding.behavior_dev = "key_press";
-            macro->state->bindings[macro->count].binding.param1 =
-                ZMK_HID_USAGE(ev->usage_page, ev->keycode);
-            macro->state->bindings[macro->count].binding.param2 = 0;
-
-            if (macro->count > 0) {
-                macro->state->bindings[macro->count - 1].wait_ms = elapsedTime;
-            }
-
-            macro->count++;
-            total_recorded_actions++;
-
-            if (macro->config->no_output) {
-                return ZMK_EV_EVENT_HANDLED;
-            }
-            return ZMK_EV_EVENT_BUBBLE;
-        } else if (total_recorded_actions >= CONFIG_ZMK_DYNAMIC_MACRO_MAX_ACTIONS) {
-            LOG_ERR(
-                "Action not recorded, not enough space, CONFIG_ZMK_DYNAMIC_MACRO_MAX_ACTIONS %d",
-                CONFIG_ZMK_DYNAMIC_MACRO_MAX_ACTIONS);
-            if (macro->config->no_output) {
-                return ZMK_EV_EVENT_HANDLED;
-            }
-            return ZMK_EV_EVENT_BUBBLE;
+        if (!macro->recording) {
+            continue;
         }
+
+        if (macro->count >= CONFIG_ZMK_DYNAMIC_MACRO_MAX_ACTIONS) {
+            LOG_ERR("Action not recorded, CONFIG_ZMK_DYNAMIC_MACRO_MAX_ACTIONS=%d reached",
+                    CONFIG_ZMK_DYNAMIC_MACRO_MAX_ACTIONS);
+            return macro->config->no_output ? ZMK_EV_EVENT_HANDLED : ZMK_EV_EVENT_BUBBLE;
+        }
+
+        uint32_t eventTime = k_uptime_get();
+        uint32_t elapsedTime = eventTime - macro->state->lastEventTime;
+        macro->state->lastEventTime = eventTime;
+
+        macro->state->bindings[macro->count].pressed = ev->state;
+        macro->state->bindings[macro->count].binding.behavior_dev = "key_press";
+        macro->state->bindings[macro->count].binding.param1 =
+            ZMK_HID_USAGE(ev->usage_page, ev->keycode);
+        macro->state->bindings[macro->count].binding.param2 = 0;
+
+        if (macro->count > 0) {
+            macro->state->bindings[macro->count - 1].wait_ms = elapsedTime;
+        }
+
+        macro->count++;
+
+        return macro->config->no_output ? ZMK_EV_EVENT_HANDLED : ZMK_EV_EVENT_BUBBLE;
     }
     return ZMK_EV_EVENT_BUBBLE;
 }
