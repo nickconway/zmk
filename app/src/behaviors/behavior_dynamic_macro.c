@@ -134,8 +134,11 @@ static int on_dynamic_macro_binding_pressed(struct zmk_behavior_binding *binding
             }
             macro->count = 0;
         } else {
-            struct recording_macro *macro;
-            macro = find_recording_macro(event.position);
+            struct recording_macro *macro = find_recording_macro(event.position);
+            if (macro == NULL) {
+                LOG_WRN("Stop-recording with no active recording at position %d", event.position);
+                return ZMK_BEHAVIOR_OPAQUE;
+            }
             macro->recording = false;
             macro->state->count = macro->count;
         }
