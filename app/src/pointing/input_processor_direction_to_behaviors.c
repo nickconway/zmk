@@ -53,7 +53,7 @@ static int ip_direction_to_behaviors_handle_event(const struct device *dev,
 #endif
             };
 
-            size_t index = i;
+            size_t index = i * 2;
 
             if (event->value > 0) {
                 index++;
