@@ -53,13 +53,13 @@ static int ip_direction_to_behaviors_handle_event(const struct device *dev,
 #endif
             };
 
-            struct zmk_behavior_binding *binding;
+            size_t index = i;
 
-            if (event->value < 0) {
-                binding = &cfg->bindings[i];
-            } else if (event->value > 0) {
-                binding = &cfg->bindings[i + 1];
+            if (event->value > 0) {
+                index++;
             }
+
+            const struct zmk_behavior_binding *binding = &cfg->bindings[index];
 
             LOG_DBG("invoking %s (%d %d) from %d for position %d with %d listeners",
                     binding->behavior_dev, binding->param1, binding->param2, event->value,
