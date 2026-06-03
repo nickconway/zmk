@@ -8,13 +8,13 @@ compatible: "zmk,input-processor-direction-to-behaviors"
 include: ip_zero_param.yaml
 
 properties:
-    codes:
-        type: array
-        required: true
-    bindings:
-        type: phandle-array
-        required: true
-    invoke-every-ms:
-        type: int
-        required: false
-        default: 0
+  codes:
+    type: array
+    required: true
+  bindings:
+    type: phandle-array
+    required: true
+  invoke-every-ms:
+    type: int
+    required: false
+    default: 0
