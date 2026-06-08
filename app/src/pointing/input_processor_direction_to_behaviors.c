@@ -93,7 +93,7 @@ static int ip_direction_to_behaviors_handle_event(const struct device *dev,
 
                 if (ret < 0) {
                     LOG_ERR("Error locking for updating %d", ret);
-                    return;
+                    return ZMK_INPUT_PROC_STOP;
                 }
 
                 LOG_DBG("invoking %s (%d %d) from %d for position %d with %d listeners",
