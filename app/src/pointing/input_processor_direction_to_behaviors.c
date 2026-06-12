@@ -111,11 +111,11 @@ static int ip_direction_to_behaviors_handle_event(const struct device *dev,
                 return ZMK_INPUT_PROC_STOP;
             }
 
-            return ZMK_INPUT_PROC_STOP;
+            return ZMK_INPUT_PROC_CONTINUE;
         }
     }
 
-    return ZMK_INPUT_PROC_STOP;
+    return ZMK_INPUT_PROC_CONTINUE;
 }
 
 static struct zmk_input_processor_driver_api ip_direction_to_behaviors_driver_api = {
