@@ -14,6 +14,7 @@
 #include <zmk/events/keycode_state_changed.h>
 #include <dt-bindings/zmk/dynamic_macros.h>
 #include <dt-bindings/zmk/hid_usage_pages.h>
+#include <dt-bindings/zmk/modifiers.h>
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
@@ -175,8 +176,10 @@ static int dynamic_macro_keycode_state_changed_listener(const zmk_event_t *eh) {
 
         macro->state->bindings[macro->count].pressed = ev->state;
         macro->state->bindings[macro->count].binding.behavior_dev = "key_press";
+        // Keep modifiers encoded in the keycode (e.g. PIPE = LS(BSLH)) so playback matches
         macro->state->bindings[macro->count].binding.param1 =
-            ZMK_HID_USAGE(ev->usage_page, ev->keycode);
+            APPLY_MODS((uint32_t)(ev->implicit_modifiers | ev->explicit_modifiers),
+                       ZMK_HID_USAGE(ev->usage_page, ev->keycode));
         macro->state->bindings[macro->count].binding.param2 = 0;
 
         if (macro->count > 0) {
