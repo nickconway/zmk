@@ -6,7 +6,7 @@ ZMK Studio provides runtime update functionality to ZMK powered devices, allowin
 
 :::info
 
-To use ZMK Studio, a keyboard needs to be [configured appropriately](#adding-zmk-studio-support-to-a-keyboard). ZMK has updated some, but not all, of its in-tree keyboards for use with ZMK Studio, the list of which can be found [here](/blog/2024/11/11/zmk-studio-mvp-ga). If your keyboard is supported by an external module/config, check with the maintainer to see if support has been added.
+To use ZMK Studio, a keyboard needs to be [configured appropriately](#adding-zmk-studio-support-to-a-keyboard). ZMK has updated some, but not all, of its in-tree keyboards for use with ZMK Studio, the list of which can be found in the [ZMK Studio blog post](/blog/2024/11/11/zmk-studio-mvp-ga). If your keyboard is supported by an external module/config, check with the maintainer to see if support has been added.
 
 :::
 
@@ -54,7 +54,7 @@ Generally, if you intend to use ZMK Studio, then you should not make any further
 
 ## Accessing ZMK Studio
 
-You can use ZMK Studio with Chrome/Edge at https://zmk.studio/.
+You can use ZMK Studio with Chrome/Edge at <https://zmk.studio/>.
 
 To use the native app for Linux, macOS, or Windows, visit the [download page](https://zmk.studio/download).
 
@@ -87,11 +87,11 @@ For a split keyboard, you should do this _only_ for your central/left side, e.g.
 ```yaml title="build.yaml"
 ---
 include:
-  - board: nice_nano
+  - board: nice_nano//zmk
     shield: corne_left
     snippet: studio-rpc-usb-uart
     cmake-args: -DCONFIG_ZMK_STUDIO=y
-  - board: nice_nano
+  - board: nice_nano//zmk
     shield: corne_right
 ```
 
@@ -100,7 +100,7 @@ include:
 When building locally, use the `-S` parameter to include the `studio-rpc-usb-uart` snippet. Instead of adding it to your config file, you can also append the `ZMK_STUDIO` Kconfig as an additional CMake argument, e.g.:
 
 ```bash
-west build -d build/cl_studio -b nice_nano \
+west build -d build/cl_studio -b nice_nano//zmk \
   -S studio-rpc-usb-uart -- -DSHIELD=corne_left -DCONFIG_ZMK_STUDIO=y
 ```
 
