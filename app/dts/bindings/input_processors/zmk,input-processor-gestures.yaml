@@ -8,12 +8,12 @@ compatible: "zmk,input-processor-gestures"
 include: ip_zero_param.yaml
 
 properties:
-    fingers:
-        type: int
-        required: true
-    codes:
-        type: array
-        required: true
-    bindings:
-        type: phandle-array
-        required: true
+  fingers:
+    type: int
+    required: true
+  codes:
+    type: array
+    required: true
+  bindings:
+    type: phandle-array
+    required: true
